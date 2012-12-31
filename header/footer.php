@@ -15,9 +15,9 @@
     <div class="container">
         <div class="row">
             <div class="span12">
-                <p class="pull-right">Admin Theme by Nathan Speller</p>
+                <p class="pull-right">Developed By Dewmal Nilanka</p>
 
-                <p>&copy; Copyright 2013 FreelanceLeague</p>
+                <p>Enterprise Notification manager</p>
             </div>
         </div>
     </div>
