@@ -1,0 +1,148 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.11.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Dec 31, 2012 at 11:17 AM
+-- Server version: 5.1.65
+-- PHP Version: 5.2.6
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `project_enotice`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catagorey`
+--
+
+CREATE TABLE IF NOT EXISTS `catagorey` (
+  `cat_id` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`cat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `catagorey`
+--
+
+INSERT INTO `catagorey` (`cat_id`, `name`) VALUES
+(1, 'Function');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Department`
+--
+
+CREATE TABLE IF NOT EXISTS `Department` (
+  `dep_id` int(11) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `supid` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`dep_id`),
+  KEY `fk_Department_Employee1_idx` (`supid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Department`
+--
+
+INSERT INTO `Department` (`dep_id`, `name`, `supid`) VALUES
+(1, 'Admin', NULL),
+(2, 'CS', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Employee`
+--
+
+CREATE TABLE IF NOT EXISTS `Employee` (
+  `empid` varchar(25) NOT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `dob` date DEFAULT NULL,
+  `joindate` timestamp NULL DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `supervisour` varchar(25) DEFAULT NULL,
+  `dep_id` int(11) DEFAULT NULL,
+  `TYPE` enum('EM','MA','AD') DEFAULT NULL,
+  PRIMARY KEY (`empid`),
+  KEY `fk_Employee_Employee_idx` (`supervisour`),
+  KEY `fk_Employee_Department1_idx` (`dep_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Employee`
+--
+
+INSERT INTO `Employee` (`empid`, `name`, `email`, `dob`, `joindate`, `password`, `supervisour`, `dep_id`, `TYPE`) VALUES
+('1', 'admin', 'admin@admin.com', '0000-00-00', '2012-12-28 17:42:45', 'admin', NULL, 1, 'EM'),
+('2', 'csmanager', 'cs@cs.com', '0000-00-00', '2012-12-28 17:47:54', 'cs', NULL, 1, 'EM');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Notice`
+--
+
+CREATE TABLE IF NOT EXISTS `Notice` (
+  `note_id` varchar(45) NOT NULL,
+  `topic` varchar(45) DEFAULT NULL,
+  `content` longtext,
+  `posteddate` timestamp NULL DEFAULT NULL,
+  `expiredate` timestamp NULL DEFAULT NULL,
+  `catagorey_cat_id` int(11) NOT NULL,
+  `empid` varchar(25) NOT NULL,
+  `supid` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`note_id`),
+  KEY `fk_Notice_catagorey1_idx` (`catagorey_cat_id`),
+  KEY `fk_Notice_Employee1_idx` (`empid`),
+  KEY `fk_Notice_Employee2_idx` (`supid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Notice`
+--
+
+INSERT INTO `Notice` (`note_id`, `topic`, `content`, `posteddate`, `expiredate`, `catagorey_cat_id`, `empid`, `supid`) VALUES
+('1', 'Year End Trip', 'Year End Trip', '2012-12-28 18:02:11', '2012-12-11 18:00:00', 1, '1', '1');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Department`
+--
+ALTER TABLE `Department`
+  ADD CONSTRAINT `fk_Department_Employee1` FOREIGN KEY (`supid`) REFERENCES `Employee` (`empid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Employee`
+--
+ALTER TABLE `Employee`
+  ADD CONSTRAINT `fk_Employee_Department1` FOREIGN KEY (`dep_id`) REFERENCES `Department` (`dep_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Employee_Employee` FOREIGN KEY (`supervisour`) REFERENCES `Employee` (`empid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `Notice`
+--
+ALTER TABLE `Notice`
+  ADD CONSTRAINT `fk_Notice_catagorey1` FOREIGN KEY (`catagorey_cat_id`) REFERENCES `catagorey` (`cat_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Notice_Employee1` FOREIGN KEY (`empid`) REFERENCES `Employee` (`empid`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Notice_Employee2` FOREIGN KEY (`supid`) REFERENCES `Employee` (`empid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
